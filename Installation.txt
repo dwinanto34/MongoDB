@@ -1,0 +1,33 @@
+
+Installation using Brew:
+- brew tap mongodb/brew
+- brew update
+- brew install mongodb-community@8.0
+
+The installation includes the following binaries:
+- The mongod server
+- The mongos sharded cluster query router
+- The MongoDB Shell, mongosh
+
+After the installation, we should expect to see these files:
+- Configuration file
+/opt/homebrew/etc/mongod.conf
+- Log directory
+/opt/homebrew/var/log/mongodb/*
+- Data directory
+/opt/homebrew/var/mongodb
+
+To start mongodb service use below command
+- brew services start mongodb-community@8.0
+
+To stop mongodb service use below command
+- brew services stop mongodb-community@8.0
+
+To begin using MongoDB, connect mongosh to the running instance. From a new terminal, run below command
+- mongosh
+
+Reference:
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition
+
+Download Compass (GUI for MongoDB):
+https://www.mongodb.com/products/tools/compass
