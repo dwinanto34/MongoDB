@@ -1,0 +1,23 @@
+
+-- Create a new collection
+db.createCollection(${collectionName});
+Example: db.createCollection("flightData");
+
+-- Display all collections.
+show collections;
+db.getCollectionNames();
+
+-- Display all collection information.
+db.getCollectionInfos();
+
+-- Drop a collection.
+db.${collectionName}.drop();
+Example: db.flightData.drop();
+
+-- Display collection statistics.
+db.${collectionName}.stats();
+Example: db.flightData.stats();
+
+Note:
+- The maximum size of a document is 16 MB.
+- The maximum nested level is 100.
