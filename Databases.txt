@@ -1,0 +1,13 @@
+
+-- Create or switch to an existing database.
+use ${database_name}; 
+Example: use flights;
+
+-- Show all databases (only displays databases that contain collections).
+show databases;
+
+-- Drop the current database.
+db.dropDatabase();
+
+-- Display host information.
+db.hostInfo();
