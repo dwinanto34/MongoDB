@@ -1,0 +1,85 @@
+
+1. InsertOne
+    - For inserting a single document.
+        db.${collectionName}.insertOne(
+            ${data}
+        );
+
+    Example:
+        db.flightData.insertOne(
+            {
+                "departureAirport": "MUC",
+                "arrivalAirport": "SFO",
+                "aircraft": "Airbus A380",
+                "distance": 12000,
+                "intercontinental": true
+            }
+        );
+
+
+2. InsertMany
+    - For inserting multiple documents.
+        db.${collectionName}.insertMany(
+            [
+                ${data1},
+                ${data2}
+            ]
+        );
+
+    Example:
+        db.flightData.insertMany(
+            [
+                {
+                    "departureAirport": "MUC",
+                    "arrivalAirport": "SFO",
+                    "aircraft": "Airbus A380",
+                    "distance": 12000,
+                    "intercontinental": true
+                },
+                {
+                    "departureAirport": "LHR",
+                    "arrivalAirport": "TXL",
+                    "aircraft": "Airbus A320",
+                    "distance": 950,
+                    "intercontinental": false
+                }
+            ]
+        );
+
+
+3. Insert
+    - Handles both one or multiple documents.
+        db.${collectionName}.insert(
+            ${data}
+        );
+        db.${collectionName}.insert(
+            [
+                ${data1},
+                ${data2}
+            ]
+        );
+
+    Example:
+        // Use a literal string as ID.
+        db.flightData.insert(
+            {
+                "test": "test one",
+                "_id": "defined-id-001"
+            }
+        );
+
+        // Use ObjectId as ID.
+        db.flightData.insert(
+            {
+                "test": "test two",
+                "_id": new ObjectId("672829a5c786b52472d11c19")
+            }
+        );
+
+        // Use new ObjectId, meaning that MongoDB will assign a random ObjectID to it.
+        db.flightData.insert(
+            {
+                "test": "test three",
+                "_id": new ObjectId()
+            }
+        );
