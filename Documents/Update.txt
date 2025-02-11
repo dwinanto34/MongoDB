@@ -1,0 +1,113 @@
+
+1. UpdateOne
+    - Updates one document that matches the filter condition
+        db.${collectionName}.updateOne(
+            ${filter},
+            ${updateJson}
+        );
+
+    Example:
+        db.flightData.updateOne(
+            {
+                departureAirport: 'LHR'
+            },
+            {
+                $set: {
+                    newField: "new value"
+                }
+            }
+        );
+
+
+2. UpdateMany
+    - Updates all documents that match the filter condition.
+        db.${collectionName}.updateMany(
+            ${filter},
+            ${updateJson}
+        );
+
+    Example:
+        db.flightData.updateMany({}, {$set: {newField: "new value"}})
+        db.flightData.updateMany({departureAirport: 'LHR'}, {$set: {newField3: "new value"}})
+
+
+3. ReplaceOne
+    - Override the whole old JSON with the new provided JSON
+        db.${collectionName}.replaceOne(
+            ${filter},
+            ${replacement}
+        );
+
+    Example:
+        db.flightData.replaceOne(
+            {
+                _id: ObjectId('672829a5c786b52472d11c19')
+            },
+            {
+                onlyThisField: 1
+            }
+        );
+
+
+4. Field update operator
+    - $set, $unset (to remove field), $rename, $inc, $currentDate
+        db.flightData.updateOne(
+            {
+                departureAirport: 'LHR'
+            },
+            {
+                $set: {
+                    newField: "new value"
+                }
+            }
+        );
+
+        db.flightData.updateOne(
+            {
+                _id: ObjectId('672829a5c786b52472d11c19')
+            },
+            {
+                $rename: {
+                    "onlyThisField": "onlyThisFieldRenamed"
+                }
+            }
+        );
+
+        db.flightData.updateOne(
+            {
+                _id: ObjectId('672829a5c786b52472d11c19')
+            },
+            {
+                // for incremental
+                $inc: {
+                    "onlyThisFieldRenamed": 10
+                }
+
+                // for decremental
+                $inc: {
+                    "onlyThisFieldRenamed": -10
+                }
+            }
+        );
+
+        db.flightData.updateOne(
+            {
+                _id: ObjectId('672829a5c786b52472d11c19')
+            },
+            {
+                $inc: {
+                    "onlyThisFieldRenamed": 10
+                }
+            }
+        );
+
+        db.flightData.updateOne(
+            {
+                _id: ObjectId('672829a5c786b52472d11c19')
+            },
+            {
+                $unset: {
+                    "onlyThisFieldRenamed": ""
+                }
+            }
+        );
