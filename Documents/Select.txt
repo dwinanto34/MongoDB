@@ -1,0 +1,375 @@
+
+1. FindOne
+    - Returns one document.
+        db.${collectionName}.findOne();
+
+    Example:
+        db.flightData.findOne();
+
+    - Find with filter conditions.
+        db.${collectionName}.findOne(
+            ${filter},
+            ${projection}
+        );
+
+    Examples:
+        db.flightData.findOne(
+            {
+                "_id": ObjectId('67a0563451938eb6d5e24b3a')
+            }
+        );
+        db.flightData.findOne(
+            {
+                aircraft: 'Airbus A380'
+            }
+        );
+
+        // with projection (1 to show, and 0 to hide)
+        db.flightData.findOne(
+            {
+                aircraft: 'Airbus A380'
+            },
+            {
+                _id: 0,
+                distance: 1,
+                aircraft: 1
+            }
+        );
+
+
+2. Find
+    - Returns all documents.
+        db.${collectionName}.find();
+
+    Example:
+        db.flightData.find();
+
+    - Returns all documents with pretty JSON formatting.
+        db.${collectionName}.find().pretty();
+
+    Example:
+        db.flightData.find().pretty();
+
+    - Returns all documents with filter conditions.
+        db.${collectionName}.find(
+            ${filter}
+        ).pretty();
+
+    Example:
+        db.flightData.find(
+            {aircraft: 'Airbus A380'}
+        ).pretty();
+
+
+3. ToArray
+    - Find will always use pagination
+        db.${collectionName}.find();
+    - Use `toArray()` to fetch all data without pagination
+        db.flightData.find().toArray();
+    - Iterate through documents and print them as JSON.
+        db.flightData.find().forEach((data) => {printjson(data)})
+
+
+4. Comparison operators
+    - $lt, $lte, $gt, $gte, $eq, and $mod
+        db.flightData.find(
+            {
+                distance: {
+                    $lt: 100000
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                distance: {
+                    $lt: 100000, $gt: 10
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                distance: {
+                    $mod: [12, 0]
+                }
+            }
+        );
+
+
+5. Set operators
+    - $in, $nin (not in)
+        db.flightData.find(
+            {
+                arrivalAirport: {
+                    $in: ["SFO", "TXL"]
+                }
+            }
+        );
+
+
+6. Using logical operators
+    - $ne (not equal), $and, $or, $not, and $nor
+        db.flightData.find(
+            {
+                arrivalAirport: {
+                    $ne: "TXL"
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                distance: {
+                    $not: {
+                        $eq: 12000
+                    }
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                $nor: [
+                    {
+                        aircraft: "Airbus A320"
+                    },
+                    {
+                        arrivalAirport: "SFO"
+                    }
+                ]
+            }
+        );
+
+        db.flightData.find(
+            {
+                $and: [
+                    {
+                        aircraft: {
+                            $eq: "Airbus A320"
+                        }
+                    },
+                    {
+                        intercontinental: false
+                    },
+                    {
+                        departureAirport: "LHR"
+                    }
+                ]
+            }
+        );
+
+
+7. Using element query operators
+    - $type, $exists, and $jsonSchema
+        db.flightData.find(
+            {
+                aircraft: {
+                    $exists: false
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                $jsonSchema: {
+                    required: [
+                        "aircraft"
+                    ]
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                test: {
+                    $type: "string"
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                $jsonSchema: {
+                    required: [
+                        "aircraft"
+                    ],
+                    properties: {
+                        aircraft: {
+                            bsonType: "string"
+                        }
+                    }
+                }
+            }
+        );
+
+
+8. Using evaluation query operators
+    - $expr, $eq, and $regex
+        db.flightData.find(
+            {
+                $expr: {
+                    $ne: ["$departureAirport", "$arrivalAirport"]
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                $expr: {
+                    $eq: [
+                        {
+                            $toLower: "$arrivalAirport"
+                        }, "txl"
+                    ]
+                }
+            }
+        );
+
+        db.flightData.find(
+            {
+                aircraft: {
+                    $regex: "airBUS",
+                    $options: "i" // case insensitive
+                }
+            }
+        );
+
+9. Full text search
+    - First, we need to create an index
+        db.flightData.createIndex(
+            {
+                aircraft: "text"
+            }
+        );
+
+    - Now, we can perform a full-text search
+        db.flightData.find(
+            {
+                $text: {
+                    $search: "Airbus"
+                }
+            }
+        );
+
+    - Show relevancy score in full-text search
+        db.flightData.find(
+            {
+                $text: {
+                    $search: "Airbus"
+                }
+            },
+            {
+                score: {
+                    $meta: "textScore"
+                }
+            }
+        );
+
+
+10. Using Javascript
+        db.flightData.find(
+            {
+                $where: function() {
+                    return this.distance == 12000;
+                }
+            }
+        );
+
+
+11. Array query operator
+        db.flightData.updateMany(
+            {
+                _id: ObjectId('67a0563451938eb6d5e24b3a'),
+            },
+            {
+                $set: {
+                    transits: ["CGK", "HND"]
+                }
+            }
+        );
+
+        - must include all elements
+        db.flightData.find(
+            {
+                transits: {
+                    $all: ["CGK", "HND"]
+                }
+            }
+        );
+
+        - in query
+        db.flightData.find(
+            {
+                transits: {
+                    $elemMatch: {
+                        $in: ["CGK"]
+                    }
+                }
+            }
+        );
+
+        - query by size
+        db.flightData.find(
+            {
+                transits: {
+                    $size: 2
+                }
+            }
+        );
+
+
+12. Projection operator
+        db.flightData.find(
+            {}, // filter
+            {
+                // Include the 'aircraft' and 'distance' fields in the result
+                aircraft: 1,
+                distance: 1,
+
+                // Include the 'transits' field, but only if any element within 'transits' matches "NOT FOUND"
+                transits: {
+                    $elemMatch: {
+                        $in: ["NOT FOUND"]
+                    }
+                }
+            }
+        );
+
+        db.flightData.find(
+            {}, // filter
+            {
+                // Include the 'transits' field, start from index 0, and show the first 2 elements
+                transits: {
+                    $slice: 2
+                }
+
+                // Include the 'transits' field, show the last 2 elements
+                transits: {
+                    $slice: -2
+                }
+
+                // Include the 'transits' field, start from index 1, and show 1 element
+                transits: {
+                    $slice: [1, 1]
+                }
+            }
+        );
+
+
+13. Query modifier
+    - count
+    db.flightData.find().count();
+    - limit
+    db.flightData.find().limit(2);
+    - skip
+    db.flightData.find().skip(2);
+    - pagination
+    db.flightData.find().limit(4).skip(2);
+    - sort
+    db.flightData.find().sort(
+        {
+            arrivalAirport: 1, // Ascending order
+            aircraft: -1 // Descending order
+        }
+    );
