@@ -1,0 +1,16 @@
+
+
+1. DeleteOne
+    db.${collectionName}.deleteOne({});
+
+    Example:
+        db.flightData.deleteOne({"distance": 12000});
+        db.flightData.deleteOne({_id: ObjectId("673785f8e212be4f898af13b")})
+
+2. DeleteMany
+    db.${collectionName}.deleteMany();
+
+    Example:
+        db.flightData.deleteMany({"distance": 12000});
+        db.flightData.deleteMany({_id: ObjectId("673785f8e212be4f898af13b")})
+
