@@ -1,0 +1,73 @@
+
+1. Switch to `admin` database
+    >> use admin;
+
+
+2. Create admin users
+    db.createUser({
+        user: "admin-user",
+        pwd: ${password},
+        roles: [
+            "userAdminAnyDatabase",
+            "readWriteAnyDatabase"
+        ]
+    });
+
+    db.createUser({
+        user: "read-write-user",
+        pwd: ${password},
+        roles: [
+            {
+                role: "readWrite",
+                db: "myDatabase"
+            }
+        ]
+    });
+
+
+3. Create a Custom Role (Optional)
+    // If predefined roles are insufficient, you can create custom roles:
+    db.createRole({
+        role: "customRole",
+        privileges: [
+            {
+                resource: {
+                    db: "myDatabase",
+                    collection: ""
+                },
+                actions: ["find", "insert"]
+            }
+        ],
+        roles: []
+    });
+
+
+4. Enable Access Control
+    By default, MongoDB does not enforce authentication. Activate the access control feature:
+    >> mongod --auth
+
+    From now on, access requires a username and password:
+    >> mongo --username ${username} -- password ${password}
+
+
+5. RolesDatabase-Specific Roles
+- Database-Specific Roles
+    read: Provides read-only access to the database.
+    readWrite: Provides read and write access.
+    dbAdmin: Allows administrative tasks such as creating indexes.
+    userAdmin: Allows user management within the database.
+    dbOwner: Full access to the database, including user and index management.
+
+- Any-Database Roles
+    readAnyDatabase: Read-only access to all databases.
+    readWriteAnyDatabase: Read and write access to all databases.
+    userAdminAnyDatabase: User management across all databases.
+    dbAdminAnyDatabase: Administrative tasks across all databases.
+
+- Backup and Restore Roles
+    backup: Allows backing up data.
+    restore: Allows restoring data.
+
+- Superuser Role
+    root: Grants full administrative access to all databases and operations.
+
