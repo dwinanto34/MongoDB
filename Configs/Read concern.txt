@@ -1,0 +1,43 @@
+
+Read Concern in MongoDB:
+Read concern defines the consistency and isolation properties of the data that you read from a MongoDB replica set.
+It determines how up-to-date and consistent the data will be when queried.
+
+
+Read Concern Levels:
+- Local
+Reads data from the local node, without any guarantees about the data's freshness or consistency with
+the majority of the replica set.
+- Available
+Returns data from nodes that are available, even if not fully synchronized or consistent. This may
+return outdated data.
+- Majority
+Ensures the read reflects the most recent majority-committed version of the data. It guarantees that the data
+has been acknowledged by a majority of replica set members.
+- Linearizable
+Queries all nodes and returns the most recent data, ensuring the query is consistent with the latest write that
+has been acknowledged by the majority. Provides the strongest consistency but may be slower.
+- Snapshot
+Reads data from a majority (quorum) of the replica set members but allows reading uncommitted data from ongoing
+transactions. This provides a consistent snapshot, but without enforcing the strictest isolation.
+
+
+Configuration:
+    db.${collectionName}.find(
+        {},
+        {
+            readConcern: {
+                level: ${readConcernLevel}
+            }
+        }
+    );
+
+    Example:
+    db.flightData.find(
+        {},
+        {
+            readConcern: {
+                level: "local"
+            }
+        }
+    );
