@@ -1,0 +1,36 @@
+
+1. Bulk write operation
+    // insertOne, insertMany
+    // updateOne, updateMany
+    // deleteOne, deleteMany
+    // replaceOne
+
+    db.flightData.bulkWrite(
+        [
+            {
+                insertOne: {
+                    document: {
+                        "departureAirport": "MUC",
+                        "arrivalAirport": "SFO",
+                        "aircraft": "Airbus A380",
+                        "distance": 12000,
+                        "intercontinental": true
+                    }
+                }
+            },
+            {
+                updateMany: {
+                    filter: {
+                        departureAirport: {
+                            $in: ["MUC"]
+                        }
+                    },
+                    update: {
+                        $set: {
+                            newField: "new value"
+                        }
+                    }
+                }
+            }
+        ]
+    );
