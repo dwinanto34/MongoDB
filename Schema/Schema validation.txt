@@ -1,0 +1,65 @@
+
+1. Add a constraint for new collection
+    db.createCollection(
+        ${collectionName},
+        {
+            validator: {
+                $jsonSchema: {
+                    ${jsonSchema}
+                }
+            }
+        }
+    );
+
+    db.createCollection(
+        "flightData",
+        {
+            validator: {
+                $jsonSchema: {
+                    bsonType: "object",
+                    required: ["departureAirport"],
+                    properties: {
+                        departureAirport: {
+                            bsonType: "string",
+                            description: "Departure airport must be a string"
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+
+2. Add a constraint for an existing collection
+    // Existing data won't be validated by newly added validator
+
+    db.runCommand(
+        {
+            collMod: ${collectionName},
+            validationAction: ${validationAction},
+            validator: {
+                $jsonSchema: {
+                    ${jsonSchema}
+                }
+            }
+        }
+    );
+
+    db.runCommand(
+        {
+            collMod: "flightData",
+            validationAction: "error",
+            validator: {
+                $jsonSchema: {
+                    bsonType: "object",
+                    required: ["newField"],
+                    properties: {
+                        newField: {
+                            bsonType: "string",
+                            description: "New field must be a string"
+                        }
+                    }
+                }
+            }
+        }
+    );
