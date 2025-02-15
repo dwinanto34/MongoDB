@@ -1,0 +1,171 @@
+
+1. Creating index
+    // Field _id is automatically added by default
+    // 1 for ascending and -1 for descending
+    db.${collectionName}.createIndex(
+        {
+            ${fieldName}: ${indexDirection}
+        }
+    )
+
+    Example:
+    db.flightData.createIndex(
+        {
+            "departureAirport": 1
+        }
+    )
+
+
+2. Get all indexes for a collection
+    db.${collectionName}.getIndexes();
+    Example:
+    db.flightData.getIndexes();
+
+
+3. Explain analyze for select queries
+    db.${collectionName}.find(
+        {
+            ${fieldName}: ${filterValue}
+        }
+    ).explain();
+
+    Example:
+    db.flightData.find(
+        {
+            "departureAirport": "MUC"
+        }
+    ).explain();
+
+
+4. Create text indexes for full-text search
+    // Note: Each collection can have only one text index.
+    db.${collectionName}.createIndex(
+        {
+            ${fieldName}: "text"
+        },
+        {
+            weights: {
+                ${fieldName}: ${weight}
+            }
+        }
+    )
+
+    Example:
+    db.flightData.createIndex(
+        {
+            "aircraft": "text"
+        },
+        {
+            weights: {
+                "aircraft": 5
+            }
+        }
+    )
+
+
+5. Perform full-text search
+    // search using full-text search
+    db.${collectionName}.find(
+        {
+            $text: {
+                $search: ${searchTerm}
+            }
+        }
+    );
+
+    // Example
+    db.flightData.find(
+        {
+            $text: {
+                $search: "Airbus"
+            }
+        }
+    );
+
+
+5. Drop indexes
+    // Note: Dropping an index can impact the performance of queries relying on it.
+    db.${collectionName}.dropIndex(
+        ${indexName}
+    );
+
+    // Example
+    db.flightData.dropIndex(
+        "departureAirport_1"
+    );
+
+
+6. Wildcard indexes
+    // All the fields in embedded object will be indexed
+    db.${collectionName}.createIndex(
+        {
+            "${embeddedObjectName}.$**": 1
+        }
+    );
+
+    // Example
+    db.flightData.createIndex(
+        {
+            "status.$**": 1
+        }
+    );
+
+
+7. Find
+    db.${collectionName}.find(
+        {
+            ${nestedField}: ${filterValue}
+        }
+    );
+
+    // Example
+    db.flightData.find(
+        {
+            "status.description": "on-time"
+        }
+    );
+
+
+8. TTL of indexes
+    // Note: TTL indexes can only be created on fields storing date values.
+    // They automatically delete documents after the specified time.
+    db.${collectionName}.createIndex(
+        {
+            ${fieldName}: ${indexDirection}
+        },
+        {
+            "expireAfterSeconds": ${value}
+        }
+    )
+
+    Example:
+    db.flightData.createIndex(
+        {
+            "createdDate": 1
+        },
+        {
+            "expireAfterSeconds": 1000
+        }
+    )
+
+
+9. Unique indexes
+    // Ensure uniqueness of values in the specified field.
+    db.${collectionName}.createIndex(
+        {
+            ${fieldName}: ${indexDirection}
+        },
+        {
+            "unique": true
+        }
+    )
+
+    // Example
+    db.flightData.createIndex(
+        {
+            "intercontinental": 1
+        },
+        {
+            "expireAfterSeconds": 1000
+        }
+    )
