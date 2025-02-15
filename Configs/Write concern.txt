@@ -1,0 +1,61 @@
+
+Write concern:
+Determines the level of acknowledgment requested from MongoDB when performing write operations
+such as insert, update, or delete. It ensures data durability and consistency based on the specified requirements.
+
+
+Write Concern Levels:
+- Unacknowledged (w: 0)
+The client does not wait for an acknowledgment from the server.
+The fastest but offers no guarantee that the operation succeeded.
+Example Use Case: Logging or analytics where durability is less critical.
+
+- Acknowledged (w: 1):
+The default write concern.
+The client receives an acknowledgment only after the primary node commits the write.
+Example Use Case: Most standard applications where basic durability is sufficient.
+
+- Journaled (j: true):
+The write operation is acknowledged only after the data is written to the journal on the primary node.
+Provides durability in case of server failure.
+Example Use Case: Critical applications requiring data safety.
+
+- Replica Acknowledged (w: "majority"):
+The write operation is acknowledged only after it is replicated to the majority of nodes in the replica set.
+Provides the highest level of consistency and durability.
+Example Use Case: Financial systems or critical business operations.
+
+- Custom Write Concern (w: n):
+The write operation is acknowledged after it is written to n nodes in the replica set.
+Example Use Case: Applications with specific durability requirements.
+
+
+Configuration:
+    db.${collectionName}.insertOne(
+        ${data},
+        {
+            writeConcern: {
+                j: true
+            }
+        }
+    );
+
+    db.${collectionName}.updateOne(
+        ${filter},
+        ${updateJson},
+        {
+            writeConcern: {
+                w: "majority"
+            }
+        }
+    );
+
+    db.${collectionName}.deleteOne(
+        ${filter},
+        {
+            writeConcern: {
+                w: 2,
+                wtimeout: 5000
+            }
+        }
+    );
