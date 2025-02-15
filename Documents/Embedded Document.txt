@@ -1,0 +1,164 @@
+
+1. Embedded documents
+    db.flightData.find(
+        {
+            "status.description": "on-time"
+        }
+    );
+
+    db.flightData.find(
+        {
+            facilities: "entertainment"
+        }
+    );
+
+
+2. Embedded documents
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $set: {
+                status: {
+                    description: "on-time",
+                    lastUpdated: "1 hour ago"
+                }
+            }
+        }
+    );
+
+
+3. Arrays
+    // set facilities field
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $set: {
+                facilities: ["wifi", "dinner", "entertainment"]
+            }
+        }
+    );
+
+    // update specific index
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $set: {
+                "facilities.0": "wireless internet connection"
+            }
+        }
+    );
+
+    // update all elements in the array to the same value
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $set: {
+                "facilities.$[]": "wireless internet connection"
+            }
+        }
+    );
+
+
+4. $addToSet, $pop, $push, $pull, $pullAll
+    // $addToSet only insert if it does not exist
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $addToSet: {
+                "facilities": "wireless internet connection 1"
+            }
+        }
+    );
+
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $addToSet: {
+                "facilities": {
+                    $each: ["juice", "windows seat"]
+                }
+            }
+        }
+    );
+
+    // $pop remove element, first element (-1), or last element (1)
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $pop: {
+                "facilities": 1
+            }
+        }
+    );
+
+    // $push, add a new single element
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $push: {
+                "facilities": "magazine"
+            }
+        }
+    );
+
+    // $push, add new multiple elements
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $push: {
+                "facilities": {
+                    $each: ["airport lounge", "pillow"]
+                }
+            }
+        }
+    );
+
+    // $pull, delete element by condition
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $pull: {
+                "facilities": {
+                    $eq: "dinner"
+                }
+            }
+        }
+    );
+
+    // $pullAll, remove elements
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $pullAll: {
+                "facilities": ["airport lounge", "pillow"]
+            }
+        }
+    );
+
+
+5. $each, $position, $sort
+    // $position to add an element to specific index
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $push: {
+                "facilities": {
+                    $each: ["taxi", "hotel"],
+                    $position: 1
+                }
+            }
+        }
+    );
+
+    // $sort to add elements at the end, and sort all the elements (1 for ascending, and -1 for descending)
+    db.flightData.updateMany(
+        {}, // filter
+        {
+            $push: {
+                "facilities": {
+                    $each: ["taxi", "hotel"],
+                    $sort: -1
+                }
+            }
+        }
+    );
