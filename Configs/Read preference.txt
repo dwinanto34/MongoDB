@@ -1,0 +1,11 @@
+
+Read Preference (How MongoDB reads data):
+- Primary: Data is read from the primary replica set only.
+- PrimaryPreferred: Data is read from the primary replica set, but if the primary is unavailable, it will be read from a secondary replica set.
+- Secondary: Data is read only from a secondary replica set.
+- SecondaryPreferred: Data is read from a secondary replica set, but if no secondaries are available, it will fall back to the primary.
+- Nearest: Data is read from the replica set member with the lowest network latency, whether it’s primary or secondary.
+
+
+Configuration
+mongodb://localhost:27017/?readPreference=primaryPreferred
